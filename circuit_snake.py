@@ -9,8 +9,8 @@ game_speed = 4
 snake = [(2, 4)]
 dx, dy = 1, 0
 
-res = 680,680
-screen_size = int(res[0]/40),int(res[1]/40) 
+res = 1360,680
+screen_size = int(res[0]/20),int(res[1]/20) 
 
 def plot_box(x,y,width,height):
     for i in range(x, x+width):
@@ -22,7 +22,7 @@ def plot_box(x,y,width,height):
 
 
 def print_gate(gate,apple_x,apple_y):
-    text = pew.Pix.from_text(gate[:2])
+    text = pew.Pix.from_text(gate[:2],color=2,bgcolor=1)
     screen.blit(text,apple_x,apple_y)
     width= text.width
     height = text.height
@@ -36,7 +36,7 @@ def return_gates():
     width,height = print_gate(gate,apple_x,apple_y)
     return gate,width,height
 
-apple_x, apple_y = int(screen_size[0]/2), int(screen_size[1]/2)
+apple_x, apple_y = 5,6#int(screen_size[0]/2), int(screen_size[1]/2)
 gate,width,height= return_gates()
 screen.pixel(apple_x, apple_y, 2)
 
