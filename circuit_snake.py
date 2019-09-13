@@ -9,7 +9,7 @@ game_speed = 4
 snake = [(2, 4)]
 dx, dy = 1, 0
 
-res = 1000,680
+res = 680,680
 screen_size = int(res[0]/40),int(res[1]/40) 
 
 def plot_box(x,y,width,height):
