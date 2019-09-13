@@ -28,7 +28,6 @@ snake = [(2, 4)]
 dx, dy = 1, 0
 apple_x, apple_y = 6, 4
 screen.pixel(apple_x, apple_y, 2)
-restart = 0,0
 
 while True:
     if len(snake) > 1:
@@ -63,6 +62,7 @@ while True:
             apple_x = qrand(3)
             apple_y = qrand(3)
         screen.pixel(apple_x, apple_y, 2)
+        screen.pixel(x, y, 0)
         game_speed += 0.2
     else:
         x, y = snake.pop(0)
