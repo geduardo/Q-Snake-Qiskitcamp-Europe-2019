@@ -163,7 +163,7 @@ while True: #snake runs
         snakepos=1
 
     #snake head tunnels
-    if tunnel==0 and (x, y) in bar:
+    if headtunnel==0 and (x, y) in bar:
         E=len(snake)
         tunnel = tunnelres(U0, E, L, beta(U0, E), gamma_sq(U0, E))
         print('head tunnels?', tunnel)
@@ -173,6 +173,8 @@ while True: #snake runs
             print('head tunnels')
             snakepos+=1
             headtunnel+=1
+    elif headtunnel==1 and (x, y) in bar:
+        headtunnel=0
     #####TUNNEL END
 
 
