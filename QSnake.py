@@ -44,19 +44,18 @@ while True:
     x = (x + dx)
     y = (y + dy)
 
-    # #Let's create a barrier
-    # size_barrier=3
-    # y_position_barrier=6
-    # x_position_barrier=2
-    # barrier=[(x_position_barrier,y_position_barrier)]
-    
-   # for i in range(0,size_barrier):
-       # barrier.append(((x+i),y))
-       # screen.pixel(x_position_barrier+i,y_position_barrier,2)
+    #Let's create a barrier
+    size_barrier=3
+    y_position_barrier=1
+    x_position_barrier=4
+    barrier=[(x_position_barrier,y_position_barrier)]
+    for i in range(0,size_barrier):
+        barrier.append(((x_position_barrier+i),y_position_barrier))
+        screen.pixel(x_position_barrier+i,y_position_barrier,1)
 
     #Now we define a loop to end the loop (and the game) if the next position
     # of the head is in the snake or it goes out of the grid
-    if (x, y) in snake or x==9 or y==9 or x==-1 or y==-1:
+    if (x, y) in snake or x==9 or y==9 or x==-1 or y==-1 or ((x,y) in barrier):
         #Here we turn of all the pixles from the snake and the apple
         for (i,j) in snake:
             screen.pixel(i,j,0)
