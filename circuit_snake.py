@@ -1,16 +1,59 @@
 import pew
 import random
-
+import numpy
 
 pew.init()
 screen = pew.Pix()
 
 game_speed = 4
-snake = [(2, 4)]
+snake_size = 4
+
+##def create_snake():
+##    size = snake_size*3*snake_size
+##    snake = np.zeros((2, size)) 
+##    snake_x = 16 
+##    snake_y = 25
+##    i=0
+##    for val in itertools.product(range(snake_size),range(snake_size*3))
+##        snake[0,i] = val[1] 
+##        snake[1,i] = val[0] 
+##return snake
+
+snake = [16, 20]
 dx, dy = 1, 0
 
 res = 1360,680
 screen_size = int(res[0]/20),int(res[1]/20) 
+
+
+def remove_col(x,y,width,height,dx,dy):
+    #0,1
+    if dy==0:
+        col = y
+        if dx == 1:
+            row= x-width+1
+        elif dx == -1:
+            row = x+width-1
+    #0,-1
+    elif dx == 0:
+        row  = x
+        if dy ==1:
+            col = y-height
+        elif dy== -1:
+            col = y+height
+    for i in range(width):
+        screen.pixel(x+i,col,0)
+
+
+def add_col(x,y,width,height,dx,dy):
+    #0,1
+    for i in range(width):
+        screen.pixel(x+i,y,2)
+
+def plot_full_box(x,y,width,height):
+    for i in range(x, x+width):
+        for j in range(y, y+height):
+            screen.pixel(i,j,2)
 
 def plot_box(x,y,width,height):
     for i in range(x, x+width):
@@ -30,7 +73,7 @@ def print_gate(gate,apple_x,apple_y):
     return width, height
 
 def return_gates():
-    list_gates = ["Hadamard","Rotate","Measurement"]
+    list_gates = ["H","CNOT","Me","CX","CZ"]
     gate_ind = random.randint(0,len(list_gates)-1)
     gate = list_gates[gate_ind] 
     width,height = print_gate(gate,apple_x,apple_y)
@@ -41,16 +84,15 @@ gate,width,height= return_gates()
 screen.pixel(apple_x, apple_y, 2)
 
 
-required_list = ["Hadamard","Rotate","Measurement"]
+required_list = ["H","CNOT","CNOT","H","Me","CX","CZ"]
 required_ind = 0
 
 success = False
+first=True
 
 while True:
-    if len(snake) > 1:
-        x, y = snake[-2]
-        screen.pixel(x, y, 1)
-    x, y = snake[-1]
+    #Plot full snake if first iteration
+    x, y = snake
     screen.pixel(x, y, 3)
 
     pew.show(screen)
@@ -67,14 +109,13 @@ while True:
         dx, dy = 0, 1
     x = (x + dx) % screen_size[0] 
     y = (y + dy) % screen_size[1]
-
+    snake = x,y
     if keys & pew.K_O:
         gate,width,height= return_gates()
         #screen.pixel(apple_x, apple_y, 1)
 
     #if (x, y) in snake:
     #    break
-    snake.append((x, y))
 
     if x >= apple_x-1 and x<=apple_x+width  and y >= apple_y -1 and y<=apple_y+height:
         #screen.pixel(apple_x, apple_y, 0)
@@ -97,10 +138,10 @@ while True:
             apple_y = random.getrandbits(2,high=int(screen_size/2))
         #screen.pixel(apple_x, apple_y, 2)
         #game_speed += 0.2
-        x, y = snake.pop(0)
-    else:
-        x, y = snake.pop(0)
-        screen.pixel(x, y, 0)
+    x, y = snake.pop(0)
+    screen.pixel(x, y, 0)
+    #x, y = snake.pop(0)
+    #screen.pixel(x, y, 0)
 
 
 if success is False:
