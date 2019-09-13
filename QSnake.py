@@ -50,9 +50,9 @@ while True:
     # x_position_barrier=2
     # barrier=[(x_position_barrier,y_position_barrier)]
     
-    for i in range(0,size_barrier):
-        barrier.append(((x+i),y))
-        screen.pixel(x_position_barrier+i,y_position_barrier,2)
+   # for i in range(0,size_barrier):
+       # barrier.append(((x+i),y))
+       # screen.pixel(x_position_barrier+i,y_position_barrier,2)
 
     #Now we define a loop to end the loop (and the game) if the next position
     # of the head is in the snake or it goes out of the grid
