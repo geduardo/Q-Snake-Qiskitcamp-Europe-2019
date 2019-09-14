@@ -14,3 +14,15 @@ This mode is simliar to Q-Python but runs on a PewPew emulator due to the stated
 
 ## Q-Python Circuit
 This mode involves creating a simple circuit. The goal of the game is to reach a final state of ket 1 starting from an initial state of ket 0 given the limitation that one can only use H, Z, or a measurement operation As the snake eats apples, one is tasked to select either of the options. If the user is unable to do so, then he loses. The user must also avoid randomly generated noise that also lead to a game over upon collision. 
+
+## Licences
+The original snake game and the original pew simulator are taken from
+https://github.com/pewpew-game
+Creative Commons
+Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) License
+author: 2019 by Radomir Dopieralski
+
+The compressed version of qiskit (aether) is taken from
+https://github.com/quantumJim/aether
+(Apache 2.0 licence)
+author: quantumJim
