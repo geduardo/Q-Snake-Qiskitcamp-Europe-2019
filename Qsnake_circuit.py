@@ -1,5 +1,5 @@
 
-import pew
+import pew_circuit as pew
 import random
 from aether import QuantumCircuit, simulate
 import pygame
