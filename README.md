@@ -7,3 +7,10 @@ The game has different modes:
 + Q-Python Plus
 + Q-Python Circuit
 
+## Q-Python 
+It is the simplest version of Q-Python and the only one that runs in the Pew Pew console (due to memory constraints). The game is similar to the classic game of Snake with the difference being the method by which the apples spawn. In the classic version, these apples are spawned randomly via a classical random generator. In the quantum version, this spawning is facilitated via a quantum random generator. This quantum random generator is implemented by performing measurement a qubit on a superposition. There is also a simple barrier mechanic that the snake can penetrate through quantum tunneling with some probability.
+## Q-Python Plus
+This mode is simliar to Q-Python but runs on a PewPew emulator due to the stated memory constraints. Again, the spawning of the apples are via quantum random generator. This mode, however, implementing more reastically through the actual equations and measurements made on qubits. This introduces concepts such as quantum tunneling and the bloch sphere. 
+
+## Q-Python Circuit
+This mode involves creating a simple circuit. The goal of the game is to reach a final state of ket 1 starting from an initial state of ket 0 given the limitation that one can only use H, Z, or a measurement operation As the snake eats apples, one is tasked to select either of the options. If the user is unable to do so, then he loses. The user must also avoid randomly generated noise that also lead to a game over upon collision. 
