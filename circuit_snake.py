@@ -1,4 +1,4 @@
-import pew
+import pew1 as pew
 import random
 import numpy as np
 
