@@ -36,11 +36,13 @@ _KEYMAP = {
 }
 
 
+res = 340,340
+screen_size = int(res[0]/20),int(res[1]/20) 
 def init():
     global _display, _clock, _keys
 
     pygame.display.init()
-    _display = pygame.display.set_mode((320, 320))
+    _display = pygame.display.set_mode(res)
     _clock = pygame.time.Clock()
     _keys = 0x00
 
@@ -52,10 +54,10 @@ def brightness(level):
 
 
 def show(pix):
-    for y in range(8):
-        for x in range(8):
+    for y in range(screen_size[1]):
+        for x in range(screen_size[0]):
             pygame.draw.rect(_display, _PALETTE[pix.pixel(x, y) & 0x03],
-                             (x * 40 + 2, y * 40 + 2, 36, 36), 0)
+                             (x * 20 + 2, y * 20 + 2, 36, 36), 0)
     pygame.display.flip()
 
 
@@ -87,7 +89,7 @@ class GameOver(Exception):
 
 
 class Pix:
-    def __init__(self, width=100, height=100, buffer=None):
+    def __init__(self, width=screen_size[0], height=screen_size[1], buffer=None):
         if buffer is None:
             buffer = bytearray(width * height)
         self.buffer = buffer
