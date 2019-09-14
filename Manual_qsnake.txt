@@ -68,3 +68,15 @@ The current circuit will be displayed on the lower right of the display.
 ###################
 HAVE FUN!!!!!!!!!!!
 ###################
+
+
+The original snake game and the original pew simulator are taken from
+https://github.com/pewpew-game
+Creative Commons
+Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) License
+author: 2019 by Radomir Dopieralski
+
+The compressed version of qiskit (aether) is taken from
+https://github.com/quantumJim/aether
+(Apache 2.0 licence)
+author: quantumJim
