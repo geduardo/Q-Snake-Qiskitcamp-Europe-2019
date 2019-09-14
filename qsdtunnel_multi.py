@@ -135,11 +135,14 @@ while True: #snake runs
             dx, dy = 0, 1
         x = (x + dx) % 8
         y = (y + dy) % 8
-    elif headtunnel>=1: #steering not allowed during tunneling of the head
+    elif headtunnel==1: #steering not allowed during tunneling of the head (during two rounds)
+        x = (x + dx) % 8
+        y = (y + dy) % 8
+        headtunnel=2
+    elif headtunnel>=2:
         x = (x + dx) % 8
         y = (y + dy) % 8
         headtunnel=0
-
 
 
     ##TUNNELING PROCESS
