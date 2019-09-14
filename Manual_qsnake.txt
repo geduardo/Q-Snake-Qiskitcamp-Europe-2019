@@ -1,0 +1,70 @@
+MANUAL
+
+###########
+PewPew Mode
+###########
+(files:
+gamesfile: main.py
+requirements: put aether.py into the documents of the PewPew)
+
+Rules:
+Turn PewPew on (left side down, small switch)
+use the four buttons on the left upper side to stear snake
+eat apples to grow larger
+GAME OVER conditions:
+  - biting the snakes tail
+  - hitting the side borders
+  - snake doens't tunnel through internal barrier (probability 50%)
+try tunneling through internal barrier with 50% probability
+
+########################
+Tunneling (Desktop) Mode
+########################
+(files:
+gamefile: qsdtunnel_multi.py
+requirements: put pew.py into same directory as the gamefile
+              install pygame library)
+
+Rules:
+Start the game using console (Terminal)
+classical snake game rules with the following additions:
+The length of the snake represents its energy. A higher energy corresponds to
+a higher tunneling probability. The snake is able to tunnel through the side
+barriers with this specific probability. If the head does not tunnel this means
+game over. If any consecutive segment doesn not tunnel its deleted from the snake
+tail. The probability for any tail segment top tunnel is smaller than the one for the
+head. It is adviced not to try tunneling when having fewer than 4 segments. If the snake
+consists only of its head it can always tunnel.
+
+
+#######################
+Circuit (Desktop) Mode
+#######################
+(files:
+gamefiles: Level1: circuit_snake.py
+           Level2: Qsnake_circuit.py
+requirements: Level1: pew1.py
+              Level2: pew_circuit.py, 1.png, 2.png, 3.png, 4.png, background.jpeg, gateback.jpeg)
+
+
+Rules:
+Level1:
+The goal is to transform the |0> state into the |1> by using only H, Z and Measuring(M). You Start
+in the |0> state by default. You can apply gates by letting the snake eat the RED dots. Make sure
+you eat the right gate, otherwise you lose (correct order: H, Z, H, M). You switch the current gate
+by pressing the 'Z' key on your keyboard.
+Level2:
+The goal is to transform the |0> state into the |1> by using only H, Z and Measuring(M). You Start
+in the |0> state by default. You can apply gates by letting the snake eat the RED dots. Make sure
+you eat the right gate, otherwise you lose (correct order: H, Z, H, M). You switch the current gate
+by pressing the 'Z' key on your keyboard. Everytime when eating
+a gate a GREEN dot will appear. The GREEN dots represent quantum errors that increase with increasing
+computation time (= the time you need to construct the circuit). DON'T eat the GREEN dots or it's game over.
+There is no tunneling feature in this mode and even though the barriers are not shown they exist outside
+the display (8x8 pixels to play). Hitting the borders is a game over condition.
+The current circuit will be displayed on the lower right of the display.
+
+
+###################
+HAVE FUN!!!!!!!!!!!
+###################
