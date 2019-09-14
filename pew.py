@@ -36,7 +36,7 @@ _KEYMAP = {
 }
 
 
-res = 1360,680
+res = 340,340
 screen_size = int(res[0]/20),int(res[1]/20) 
 def init():
     global _display, _clock, _keys
