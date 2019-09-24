@@ -22,18 +22,15 @@ def qrand(nbits):
 dis = pew.init()
 screen = pew.Pix()
 #Selecting game speed
-game_speed = 5
+game_speed =1 
 k=0
 #circuit graphics
 pygame.font.init()
 #add backgorund
-ima = pygame.image.load('background.jpeg')
-dis.blit(ima, (0, 320))
+pygame.draw.rect(dis,(255,255,255),(0,320,320,100))
 #gate backkgorund
-ima2 = pygame.image.load('gateback.jpeg')
-dis.blit(ima2, (0, 320))
 #add gate, change from H to Z to Meas by key stroke
-font1 = pygame.font.Font(None, 100)
+font1 = pygame.font.Font(None, 70)
 text = font1.render('H', True, (255, 0, 0))
 dis.blit(text, (10, 330))
 gates = np.zeros(3, dtype=str)
@@ -45,15 +42,8 @@ g=0
 #circuit graphics
 pygame.font.init()
 #add backgorund
-ima = pygame.image.load('background.jpeg')
-dis.blit(ima, (0, 320))
 #gate backkgorund
-ima2 = pygame.image.load('gateback.jpeg')
-dis.blit(ima2, (0, 320))
 #add gate, change from H to Z to Meas by key stroke
-font1 = pygame.font.Font(None, 100)
-text = font1.render('H', True, (255, 0, 0))
-dis.blit(text, (10, 330))
 gates = np.zeros(3, dtype=str)
 gates[0] = 'H'
 gates[1] = 'Z'
@@ -61,11 +51,15 @@ gates[2] = 'M'
 g=0
 corr = [0, 1, 0, 2]
 currg = 0
+success=False
 ima3 = pygame.image.load('1.png')
-dis.blit(ima3, (70, 320))
+ima3 = pygame.transform.scale(ima3,(65,40))
+dis.blit(ima3, (60, 320))
 images = {}
 for i in range(4):
-    images[i] = pygame.image.load(str(i+1) + '.png')
+    imag_ = pygame.image.load(str(i+1) + '.png')
+    x_size = int((i+1)*65)
+    images[i] = pygame.transform.scale(imag_,(x_size,65))
 
 
 #Selecting initial position of the snake
@@ -79,7 +73,6 @@ screen.pixel(apple_x, apple_y, 2)
 nx=random.getrandbits(3)
 ny=random.getrandbits(3)
 noise=[(nx, ny)]
-m=0
 while True:
     screen.pixel(noise[0][0],  noise[0][1],1)
     ##Now let's implement a loop for the game
@@ -109,9 +102,9 @@ while True:
         dx, dy = 0, 1
     #gate switch
     if keys & pew.K_O:
-        dis.blit(ima2, (0, 320))
+        pygame.draw.rect(dis,(255,255,255),(0,320,50,50))
         g = (g+1) % 3
-        font1 = pygame.font.Font(None, 100)
+        font1 = pygame.font.Font(None, 70)
         text = font1.render(gates[g], True, (255, 0, 0))
         dis.blit(text, (10, 330))
 
@@ -139,12 +132,12 @@ while True:
         if g != corr[currg]:
             break
         else:
-            dis.blit(images[currg+1], (70, 320))
+            if currg == 3:
+                success=True
+                break
+            dis.blit(images[currg+1], (60, 320))
             currg+=1
 
-        m=m+1
-        if m>3:
-            break
         #If the snake eats the apple we turn of the pixel of the apple
         screen.pixel(apple_x, apple_y, 0)
         #Now we define the coordinates of the apple to lie inside the snake for the loop
@@ -174,7 +167,7 @@ while True:
         screen.pixel(x, y, 0)
 
 #When the loop is finished we print the game over screen
-if m>3:
+if success is True:
     for (i,j) in snake:
             screen.pixel(i,j,0)
     screen.pixel(apple_x,apple_y,0)
