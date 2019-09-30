@@ -22,7 +22,7 @@ Tunneling (Desktop) Mode
 ########################
 (files:
 gamefile: qsdtunnel_multi.py
-requirements: put pew.py into same directory as the gamefile
+requirements: put pew_tunnel.py and pewblack.jpg into same directory as the gamefile
               install pygame library)
 
 Rules:
@@ -34,7 +34,7 @@ barriers with this specific probability. If the head does not tunnel this means
 game over. If any consecutive segment doesn not tunnel its deleted from the snake
 tail. The probability for any tail segment top tunnel is smaller than the one for the
 head. It is adviced not to try tunneling when having fewer than 4 segments. If the snake
-consists only of its head it can always tunnel.
+consists only of its head it can always tunnel. The tunnelling probability of the head is displayed below the game area. the probability for the segments (except for the head) to tunnel can be estimated as half of the probability of the head.
 
 
 #######################
@@ -44,7 +44,7 @@ Circuit (Desktop) Mode
 gamefiles: Level1: circuit_snake.py
            Level2: Qsnake_circuit.py
 requirements: Level1: pew1.py
-              Level2: pew_circuit.py, 1.png, 2.png, 3.png, 4.png, background.jpeg, gateback.jpeg)
+              Level2: pew_circuit.py, aether.py, 1.png, 2.png, 3.png, 4.png, background.jpeg, gateback.jpeg)
 
 
 Rules:
