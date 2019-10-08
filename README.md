@@ -1,8 +1,9 @@
-# Qiskitcamp hackathon: Q-Snake
+# Qiskit Camp Europe 2019 Hackathon: Q-Snake
 
 ## Introduction
-In this project we have created a simple game based on the classical game of [Snake](https://en.wikipedia.org/wiki/Snake_(video_game_genre)). Our work is written on python and qiskit (together with its reduced version "aether") and we use a programmable console called "Pew Pew". The game has different modes and is meant to be a very simple introduction to quantum programming with Qiskit and programming in general. Due to its simplicity its ideal to introduce Quantum Computing to High School students with zero background of programming or quantum mechanics, for example in the form of workshops.
-The game has different modes:
+In this project we have created a simple game based on the classical game of [Snake](https://en.wikipedia.org/wiki/Snake_(video_game_genre)). The project involves a combination of both python and qiskit (along with its reduced version, "aether") implemented on both software (via a simulator) and actual hardware (via a programmable console called the "Pew Pew"). The various modes implemented serve to introduce certain quantum computing and quantum mechanics concepts to anyone interested in the field using both a combination of Qiskit and Python. More importantly, the project also serves as a venue for enthusiasts interested in learning how to code with Qiskit. 
+
+The following modes have been implemented:
 + Q-Python
 + Q-Python Plus
 + Q-Python Circuit
