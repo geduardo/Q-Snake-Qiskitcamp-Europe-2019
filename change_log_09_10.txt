@@ -1,0 +1,22 @@
+Changes made:
+
+Tunneling:
+1. Changed colors (Snake Head - Yellow, Snake Body - Green, Apple - Green, Barriers - Red)
+2. Eliminated vec[i] complex problem
+3. Changed initial position of apple
+4. Removed redundant variable updates 
+5. Fixed everything to run on qasm simulator instead of statevector simulator
+
+
+
+Circuit:
+1. Changed colors (Snake Head - Yellow, Snake Body - Green, Apple - Green, Noise - Red)
+2. Removed 'Level' edit
+3. Changed program to run on main qiskit module instead of aether
+4. Changed boundary conditions to periodic
+5. Changed random noise production to use qrand 
+6. Set initial noise to fixed value
+7. Removed "currg=3" hardcoding
+8. Fixed everything to run on qasm simulator instead of statevector simulator
+9. Remove unused "k" variable
+10. Replaced AND and OR functions with quantum equiv
