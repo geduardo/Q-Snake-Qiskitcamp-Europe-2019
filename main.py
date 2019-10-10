@@ -5,36 +5,6 @@ import pew
 import pew
 import random
 from aether import QuantumCircuit, simulate
-def scroll(pix, dx=1):
-    x = 0
-    while True:
-
-        for x in range(x, pix.width, dx):
-
-            screen.box(0)
-
-            screen.blit(pix, -x, 1)
-
-            yield x
-        x = -8
-def change(pix, next_pix, x, dy):
-    for y in range(1, 1 + 8 * dy, dy):
-        screen.box(0)
-        screen.blit(pix, -x, y)
-        screen.blit(next_pix, 0, y - 7 * dy)
-        yield
-def hold_keys():
-    global hold
-    try:
-        keys = pew.keys()
-    except pew.GameOver:
-        keys = 0
-    if keys:
-        hold = 0
-    while pew.keys() and time.monotonic() - hold < 0.25:
-        return 0
-    hold = time.monotonic()
-    return keys
 def qrand(nbits):
     circ = QuantumCircuit(1, 1)
     circ.h(0)
