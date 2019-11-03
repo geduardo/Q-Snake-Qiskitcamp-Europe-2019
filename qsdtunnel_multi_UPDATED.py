@@ -1,5 +1,4 @@
 import pew_tunnel as pew
-import random
 import pygame
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, execute, Aer
 import numpy as np
@@ -8,30 +7,60 @@ import numpy as np
 #FUNCTIONS
 #########################################################################
 
+simulator = Aer.get_backend('qasm_simulator')
+shot=1
 
+def Qand(First_bool,Second_bool):
+    First_bool=bool(First_bool)
+    Second_bool=bool(Second_bool)    
+    a = int(First_bool)
+    b = int(Second_bool)
+    qc = QuantumCircuit(3,1)
+    if a == 1:
+        qc.x(0)
+    if b == 1:
+        qc.x(1)
+    qc.ccx(0, 1, 2) #toffoli
+    qc.measure(2,0)    
+    job = execute(qc, simulator,shots=shot)
+    counts = job.result().get_counts()
+    state = [key  for (key, value) in counts.items() if value ==1]
+    return bool(int(state[0]))
 
-simulator = Aer.get_backend('statevector_simulator')
+def Qnand(First_bool,Second_bool):
+    First_bool=bool(First_bool)
+    Second_bool=bool(Second_bool)    
+    a = int(First_bool)
+    b = int(Second_bool)
+    qc = QuantumCircuit(3,1)
+    if a == 1:
+        qc.x(0)
+    if b == 1:
+        qc.x(1)
+    qc.ccx(0, 1, 2) #toffoli
+    qc.x(2)
+    qc.measure(2,0)    
+    job = execute(qc, simulator,shots=shot)
+    counts = job.result().get_counts()
+    state = [key  for (key, value) in counts.items() if value ==1]
+    return bool(int(state[0]))
+
+def Qor(First_bool,Second_bool):
+    return Qnand(Qnand(First_bool,First_bool),Qnand(Second_bool,Second_bool))
 
 def qrand(nbits):
     """generates nbits real random numbers using quantum state measurements in qiskit."""
-
     circ = QuantumCircuit(1, 1)
     circ.h(0)
     circ.measure(0, 0)
-    val = np.zeros(nbits)
+    b=''#string holder
     for i in range(nbits):
-        job=execute(circ, simulator)
-        res = job.result()
-        vec = res.get_statevector()
-        val[i] = vec[0] * 1 + vec[1] * 0
-    #convert val array into bitstring b and then into integer
-    b = ''
-    for i in range(nbits):
-        b += str(int(val[i]))
-
-    integ= int(b, 2)
-    return integ
-
+        job=execute(circ, simulator,shots=shot)
+        counts = job.result().get_counts()
+        state = [key  for (key, value) in counts.items() if value == 1] #find the measured state, this is a list
+        b=b+state[0] #state[0] is a string
+    return int(b, 2)
+    
 def Pt(U0, E, L, betac, gamma_sqc):
     """return tunneling probability for square barrier"""
     return 1/ (np.cosh(betac * L)**2 + gamma_sqc * np.sinh(betac * L)**2)
@@ -52,33 +81,19 @@ def tunnelres(U0, length_snake, L, betac, gamma_sqc):
     """returns 0 if tunnel, returns 1 if no tunnel"""
     P_t = Pt(U0, length_snake, L, betac, gamma_sqc) #get tunneling prob depending on current snake length
     theta_rot = theta(P_t) #get rot angle
-
-    #qcirc
     qr = QuantumRegister(1)
     cr  = ClassicalRegister(1)
     circ = QuantumCircuit(qr, cr)
     circ.rx(theta_rot, qr[0])
     circ.measure(qr, cr)
-    job = execute(circ, simulator)
-    res = job.result()
-    vec = res.get_statevector()
-    val = vec[0] * 1 + vec[1] * 0
-    if val == 1:
-        return 0
-    else:
-        return 1
-    #r= random.randint(0, 1)
-    #return round(r)
-
-
-
+    job = execute(circ, simulator,shots=shot)
+    counts = job.result().get_counts()
+    state = [key  for (key, value) in counts.items() if value == 1]
+    return int(state[0])
 
 ##########################################################################
 #MAIN
 ##########################################################################
-
-
-
 
 #initialize pew
 dis = pew.init()
@@ -91,8 +106,8 @@ ds= 2**bits #displazsize
 game_speed = 4
 snake = [(2, 4)]
 dx, dy = 1, 0
-apple_x, apple_y = 6, 4
-screen.pixel(apple_x, apple_y, 2)
+apple_x, apple_y = 6, 5
+screen.pixel(apple_x, apple_y, 1)
 howmanyapples = 1 #marker for total number of eaten apples, used for scoring
 
 
@@ -124,10 +139,10 @@ while True: #snake runs
     #create barrier
     bar= []
     for i in range(ds):
-        screen.pixel(0, i, 1)
-        screen.pixel(ds-1, i, 1)
-        screen.pixel(i, 0, 1)
-        screen.pixel(i, ds-1, 1)
+        screen.pixel(0, i, 2)
+        screen.pixel(ds-1, i, 2)
+        screen.pixel(i, 0, 2)
+        screen.pixel(i, ds-1, 2)
         bar.append((0, i))
         bar.append((ds-1, i))
         bar.append((i, 0))
@@ -154,21 +169,17 @@ while True: #snake runs
             dx, dy = 1, 0
         elif keys & pew.K_DOWN and dy == 0:
             dx, dy = 0, 1
-        x = (x + dx) % 8
-        y = (y + dy) % 8
     elif headtunnel==1: #steering not allowed during tunneling of the head (during two rounds)
-        x = (x + dx) % 8
-        y = (y + dy) % 8
         headtunnel=2
     elif headtunnel>=2:
-        x = (x + dx) % 8
-        y = (y + dy) % 8
         headtunnel=0
-
+        
+    x = (x + dx) % 8
+    y = (y + dy) % 8
 
     ##TUNNELING PROCESS
     #snake tail tunnels
-    if tunnel>0 and snakepos<=len(snake):
+    if Qand(tunnel>0 ,snakepos<=len(snake)):
         #get segment for tunneling
         sx, sy = snake[-snakepos]
         E=len(snake)/2 #divide by two for lower tunnel prob for tail (lower mass->lower energy)
@@ -180,15 +191,15 @@ while True: #snake runs
             screen.pixel(sx, sy, 0)
 
     #reset if last segment tunneled
-    if tunnel>0 and snakepos==(len(snake)+1):
+    if Qand(tunnel>0 ,snakepos==(len(snake)+1)):
         tunnel=0
         snakepos=1
 
     #snake head tunnels
-    if headtunnel==0 and (x, y) in bar:
+    if Qand(headtunnel==0, (x, y) in bar):
         E=len(snake)
         tunnel = tunnelres(U0, E, L, beta(U0, E), gamma_sq(U0, E))
-        if tunnel==0 and len(snake) != 1: #head doesn't tunnel --> game over
+        if Qand(tunnel==0, len(snake) != 1): #head doesn't tunnel --> game over
             break
         else:
             snakepos+=1
@@ -208,26 +219,24 @@ while True: #snake runs
         dis.blit(text2, (130, 360)) #text2 = '100%'
     #####TUNNEL END
 
-
     if (x, y) in snake:     #exit, game over condition
         break
-
+    
     snake.append((x, y))
 
     #apple generation
-    if x == apple_x and y == apple_y:
+    if Qand(x == apple_x, y == apple_y):
         screen.pixel(apple_x, apple_y, 0)
         apple_x, apple_y = snake[0]
-        while (apple_x, apple_y) in snake or (apple_x, apple_y) in bar:
+        while Qor((apple_x, apple_y) in snake , (apple_x, apple_y) in bar):
             apple_x = qrand(bits)              #random.getrandbits(3) #use this for pseudo random number gen, no qiskit needed
             apple_y = qrand(bits)              #random.getrandbits(3)
-        screen.pixel(apple_x, apple_y, 2)
+        screen.pixel(apple_x, apple_y, 1)
         game_speed += 0.2 #increase game speed
         howmanyapples += 1 #increase number of eaten apples, score +1
     else:
         x, y = snake.pop(0)
         screen.pixel(x, y, 0)
-
 
 text = pew.Pix.from_text("Game over!") #Game over message and closing
 for dx in range(-8, text.width):
@@ -240,3 +249,4 @@ for dx in range(-8, text.width):
     screen.blit(text, -dx, 1)
     pew.show(screen)
     pew.tick(1 / 12)
+pygame.quit()
