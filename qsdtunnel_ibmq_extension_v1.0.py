@@ -10,7 +10,50 @@ import numpy as np
 
 
 
+
 simulator = Aer.get_backend('statevector_simulator')
+
+#################################################################
+###################
+#IBMQ real backends
+###################
+from qiskit import IBMQ
+from qiskit.providers.ibmq import least_busy
+
+# Load local account information
+provider = IBMQ.load_account()
+def ibmq_qrand(nbits, N):
+
+    # Get the least busy real quantum system
+    backend = least_busy(provider.backends(simulator=False))
+    print(backend, backend.status().pending_jobs)
+
+    circ = QuantumCircuit(1, 1)
+    circ.h(0)
+    circ.measure(0, 0)
+    job = execute(circ, backend, memory=True, shots=int(N*nbits))
+    res = job.result()
+    val = res.get_memory()
+    print(val)
+
+    integ = np.zeros(N)
+    for k in range(N):
+    #convert val array into bitstring b and then into integer
+        b = ''
+        shift = int(nbits * k)
+        for i in range(nbits):
+            b += str(val[i+shift])
+        integ[k] = int(b, 2)
+
+    return integ
+
+def get_rand_from_list(counter, list):
+    return list[counter]
+
+
+
+
+###############################################################
 
 def qrand(nbits):
     """generates nbits real random numbers using quantum state measurements in qiskit."""
@@ -29,7 +72,7 @@ def qrand(nbits):
     for i in range(nbits):
         b += str(int(val[i]))
 
-    integ= int(b, 2)
+    integ = int(b, 2)
     return integ
 
 def Pt(U0, E, L, betac, gamma_sqc):
@@ -113,7 +156,9 @@ ima = pygame.image.load('pewblack.jpg')
 U0=37 #max snake length = 6x6 = 36
 E=1
 L=0.05 #optimal barrier size for nice tunneling probabilities
-
+num_list = ibmq_qrand(3, 250) #list of random numbers for ibmq function
+num_list_x = num_list[:125]
+num_list_y = num_list[125:]
 #initialize tunneling tracker
 tunnel=0 #don't see other side as second barrier
 snakepos=1 #marker of snakepos, 1=head, increase towards tail
@@ -219,8 +264,8 @@ while True: #snake runs
         screen.pixel(apple_x, apple_y, 0)
         apple_x, apple_y = snake[0]
         while (apple_x, apple_y) in snake or (apple_x, apple_y) in bar:
-            apple_x = qrand(bits)              #random.getrandbits(3) #use this for pseudo random number gen, no qiskit needed
-            apple_y = qrand(bits)              #random.getrandbits(3)
+            apple_x = get_rand_from_list(howmanyapples, num_list_x)              #random.getrandbits(3) #use this for pseudo random number gen, no qiskit needed
+            apple_y = get_rand_from_list(howmanyapples, num_list_y)               #random.getrandbits(3)
         screen.pixel(apple_x, apple_y, 2)
         game_speed += 0.2 #increase game speed
         howmanyapples += 1 #increase number of eaten apples, score +1

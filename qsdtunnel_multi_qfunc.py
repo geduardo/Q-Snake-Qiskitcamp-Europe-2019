@@ -9,7 +9,6 @@ import numpy as np
 #########################################################################
 
 
-
 simulator = Aer.get_backend('statevector_simulator')
 
 def qrand(nbits):
@@ -70,6 +69,60 @@ def tunnelres(U0, length_snake, L, betac, gamma_sqc):
     #r= random.randint(0, 1)
     #return round(r)
 
+def Qand(First_bool,Second_bool):
+
+    a = int(First_bool)
+    b = int(Second_bool)
+
+    q = QuantumRegister(3)
+
+    qc = QuantumCircuit(q)
+    if a is 1:
+        qc.x(0)
+    if b is 1:
+        qc.x(1)
+    qc.ccx(q[0], q[1], q[2])
+    qc.draw()
+
+    backend = Aer.get_backend('statevector_simulator')
+    job = execute(qc, backend)
+    result = job.result()
+    outputstate = result.get_statevector(qc, decimals=8)
+    Q_and = bool(int(np.real(outputstate[7])))
+    
+    return Q_and
+
+def Qor(First_bool,Second_bool):
+
+    a = int(First_bool)
+    b = int(Second_bool)
+
+    q = QuantumRegister(3)
+
+    qc = QuantumCircuit(q)
+    if a is 1:
+        qc.x(0)
+    if b is 1:
+        qc.x(1)
+    qc.ccx(q[0], q[1], q[2])
+    qc.draw()
+
+    backend = Aer.get_backend('statevector_simulator')
+
+    job = execute(qc, backend)
+
+    result = job.result()
+
+    outputstate = result.get_statevector(qc, decimals=8)
+
+    if a is 1 and b is 0:
+        Q_or = bool(int(np.real(outputstate[1])))
+    elif a is 0 and b is 1:
+        Q_or = bool(int(np.real(outputstate[2])))
+    else:
+        Q_or = bool(int(np.real(outputstate[7])))
+    
+    return(Q_or)
 
 
 
@@ -146,13 +199,19 @@ while True: #snake runs
     #get commands
     keys = pew.keys()
     if headtunnel==0:
-        if keys & pew.K_UP and dy == 0:
+        if  Qand(bool(int(keys & pew.K_UP)),dy == 0) is True:
             dx, dy = 0, -1
-        elif keys & pew.K_LEFT and dx == 0:
+            #print(bool(int(keys & pew.K_UP)))
+            #print(dy == 0)
+            #print(Qand(bool(int(keys & pew.K_UP)),dy == 0))
+        elif Qand(bool(int(keys & pew.K_LEFT)),dx == 0) is True:
+            #print(str(keys & pew.K_LEFT) + 'right')
             dx, dy = -1, 0
-        elif keys & pew.K_RIGHT and dx == 0:
+        elif Qand(bool(int(keys & pew.K_RIGHT)),dx == 0) is True:
+            #print(str(keys & pew.K_RIGHT) + 'right')
             dx, dy = 1, 0
-        elif keys & pew.K_DOWN and dy == 0:
+        elif Qand(bool(int(keys & pew.K_DOWN)),dy == 0) is True:
+            #print(str(keys & pew.K_DOWN) + 'down')
             dx, dy = 0, 1
         x = (x + dx) % 8
         y = (y + dy) % 8
@@ -168,7 +227,7 @@ while True: #snake runs
 
     ##TUNNELING PROCESS
     #snake tail tunnels
-    if tunnel>0 and snakepos<=len(snake):
+    if Qand(tunnel>0,snakepos<=len(snake)) is True:
         #get segment for tunneling
         sx, sy = snake[-snakepos]
         E=len(snake)/2 #divide by two for lower tunnel prob for tail (lower mass->lower energy)
@@ -180,20 +239,20 @@ while True: #snake runs
             screen.pixel(sx, sy, 0)
 
     #reset if last segment tunneled
-    if tunnel>0 and snakepos==(len(snake)+1):
+    if Qand(tunnel>0, snakepos==(len(snake)+1)) is True:
         tunnel=0
         snakepos=1
 
     #snake head tunnels
-    if headtunnel==0 and (x, y) in bar:
+    if Qand(headtunnel==0, (x, y) in bar) is True:
         E=len(snake)
         tunnel = tunnelres(U0, E, L, beta(U0, E), gamma_sq(U0, E))
-        if tunnel==0 and len(snake) != 1: #head doesn't tunnel --> game over
+        if Qand(tunnel==0, len(snake) != 1) is True: #head doesn't tunnel --> game over
             break
         else:
             snakepos+=1
             headtunnel+=1
-    elif headtunnel==1 and (x, y) in bar:
+    elif Qand(headtunnel==1, (x, y) in bar) is True:
         headtunnel=0
 
     #display tunneling prob.
@@ -215,10 +274,10 @@ while True: #snake runs
     snake.append((x, y))
 
     #apple generation
-    if x == apple_x and y == apple_y:
+    if Qand(x == apple_x, y == apple_y) is True:
         screen.pixel(apple_x, apple_y, 0)
         apple_x, apple_y = snake[0]
-        while (apple_x, apple_y) in snake or (apple_x, apple_y) in bar:
+        while Qor((apple_x, apple_y) in snake, (apple_x, apple_y) in bar) is True:
             apple_x = qrand(bits)              #random.getrandbits(3) #use this for pseudo random number gen, no qiskit needed
             apple_y = qrand(bits)              #random.getrandbits(3)
         screen.pixel(apple_x, apple_y, 2)
@@ -240,3 +299,5 @@ for dx in range(-8, text.width):
     screen.blit(text, -dx, 1)
     pew.show(screen)
     pew.tick(1 / 12)
+
+pygame.quit()
